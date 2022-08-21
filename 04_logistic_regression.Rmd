@@ -1,0 +1,20 @@
+---
+title: "Logistic Regression"
+output: html_document
+date: '2022-08-21'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Exercises 
+
+## Fitting a line to a binary response
+
+When our response variable is binary, a regression model has several limitations. Among the more obvious—and logically incongruous—is that the regression line extends infinitely in either direction. This means that even though our response variable  only takes on the values 0 and 1, our fitted values 
+ can range anywhere from  to . This doesn't make sense.
+
+To see this in action, we'll fit a linear regression model to data about 55 students who applied to medical school. We want to understand how their undergraduate  relates to the probability they will be accepted by a particular school .
+
+
