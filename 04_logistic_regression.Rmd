@@ -1,20 +1,73 @@
 ---
 title: "Logistic Regression"
-output: html_document
-date: '2022-08-21'
+author: "Edneide Ramalho"
+date: "`r format(Sys.time(), '%d de %B, %Y')`"
+output: 
+    html_document:
+      highlight: textmate
+      logo: logo.png
+      theme: flatly
+      number_sections: yes
+      toc: yes
+      toc_float:
+        collapsed: yes
+        smooth_scroll: no
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
-# Exercises 
+# Packages
+
+```{r}
+library(tidyverse)
+```
+
+# Generalized linear models
+
+-   generalizaition of mujltiple regression
+    -   model non-normal responses
+-   special case: logistic regression
+    -   models binary response
+    -   uses *logit* link function
+    -   $logit(p) = log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 x$
+-   in R:
+
+`glm(is_alive ~ age, data = heartTr, family = binomial)`
+
+# Exercises
 
 ## Fitting a line to a binary response
 
-When our response variable is binary, a regression model has several limitations. Among the more obvious—and logically incongruous—is that the regression line extends infinitely in either direction. This means that even though our response variable  only takes on the values 0 and 1, our fitted values 
- can range anywhere from  to . This doesn't make sense.
+When our response variable is binary, a regression model has several limitations. Among the more obvious---and logically incongruous---is that the regression line extends infinitely in either direction. This means that even though our response variable only takes on the values 0 and 1, our fitted values can range anywhere from to . This doesn't make sense.
 
-To see this in action, we'll fit a linear regression model to data about 55 students who applied to medical school. We want to understand how their undergraduate  relates to the probability they will be accepted by a particular school .
+To see this in action, we'll fit a linear regression model to data about 55 students who applied to medical school. We want to understand how their undergraduate relates to the probability they will be accepted by a particular school .
 
+```{r}
+# data
+MedGPA <- read.csv("~/repos/multiple_and_logistic-regression_course/MedGPA.txt", sep="")
+glimpse(MedGPA)
+```
 
+```{r}
+# scatterplot with jitter
+data_space <- ggplot(MedGPA, aes(x = GPA, y = Acceptance)) + 
+  geom_jitter(width = 0, height = 0.05, alpha = 0.5)
+
+# linear regression line
+data_space + 
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+## Fitting a line to a binary response (2)
+
+In the previous exercise, we identified a major limitation to fitting a linear regression model when we have a binary response variable. However, it is not *always* inappropriate to do so. Note that our regression line only makes illogical predictions (i.e. y\^\<0 or y\^\>1) for students with very high or very low GPAs. For GPAs closer to average, the predictions seem fine.
+
+Moreover, the alternative logistic regression model --- which we will fit next --- is very similar to the linear regression model for observations near the average of the explanatory variable. It just so happens that the logistic curve is very straight near its middle. Thus, in these cases a linear regression model may still be acceptable, even for a binary response.
+
+-   Use `filter()` to find the subset of the observations in `MedGPA` whose GPAs are between 3.375 and 3.77, *inclusive*.
+
+-   Create a scatterplot called `data_space` for `Acceptance` as a function of `GPA` for only those observations. Use `geom_jitter()` to apply `0.05` jitter to the points in the y-direction and no jitter to the x direction.
+
+-   Use `geom_smooth()` to add only the simple linear regression line to `data_space`.
